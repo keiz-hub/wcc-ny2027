@@ -6,6 +6,13 @@ const ICONS = ['🎄','🎁','🎅','⭐','❤️','🕊️','🎉','🙏','✨'
 const DEMO = NAMES.map((u, i) => ({ username:u, message:RES[i], emoji:ICONS[i], image:'', color:COLORS[i % 5], shape:SHAPES[i % 4], hidden:false }));
 const say = (t, c = '') => { $('status').textContent = t; $('status').className = c; };
 const esay = (t, c = '') => { $('eStatus').textContent = t; $('eStatus').className = c; };
+const lsay = (t, c = '') => { $('lstatus').textContent = t; $('lstatus').className = c; };   // message above the table
+let scriptOk = true;                          // false when the deployed Google Apps Script is an old version
+function guard() {
+  if (scriptOk) return true;
+  lsay('Your Google Apps Script is an older version, so Add, Edit and Delete cannot work yet. Paste the latest apps-script/Code.gs, then Deploy > Manage deployments > pencil icon > Version: New version > Deploy. (Hide still works with the old one.)', 'err');
+  return false;
+}
 
 /* ---------- Read: the table ---------- */
 function render() {
@@ -17,7 +24,7 @@ function render() {
     cell().textContent = e.username; cell().textContent = e.message;
     const st = cell(), d = document.createElement('span'); d.className = 'dot'; d.style.background = e.color; st.append(d, e.shape);
     const act = cell(), btn = (label, fn, cls = 'ghost') => { const b = document.createElement('button'); b.type = 'button'; b.className = cls + ' sm'; b.textContent = label; b.onclick = fn; act.append(b); };
-    btn('Edit', () => openEditor(e));
+    btn('Edit', () => guard() && openEditor(e));
     btn(e.hidden ? 'Show' : 'Hide', () => toggleHidden(e));
     btn('Delete', () => removeEntry(e), 'ghost danger');
     body.append(tr);
@@ -30,20 +37,23 @@ function setEntries(list) { entries = list; $('list').hidden = false; $('play').
 
 $('go').onclick = async () => {
   key = $('key').value; demo = false; say('Loading…');
-  try { setEntries((await api({ action:'adminList', key })).entries); say('Loaded ' + entries.length + ' entries.', 'ok'); }
-  catch (err) { say(err.message, 'err'); }
+  try {
+    const r = await api({ action:'adminList', key }); scriptOk = r.version >= 2;
+    setEntries(r.entries); lsay(''); say('Loaded ' + entries.length + ' entries.', 'ok'); guard();
+  } catch (err) { say(err.message, 'err'); }
 };
-$('demo').onclick = () => { demo = true; setEntries(DEMO.map(e => ({ ...e }))); say('Showing demo entries. Nothing is saved.', 'ok'); };
+$('demo').onclick = () => { demo = true; scriptOk = true; lsay(''); setEntries(DEMO.map(e => ({ ...e }))); say('Showing demo entries. Nothing is saved.', 'ok'); };
 
 /* ---------- Hide / Delete ---------- */
 async function toggleHidden(e) {
-  try { if (!demo) await api({ action:'hide', key, username:e.username, hidden:!e.hidden }); e.hidden = !e.hidden; render(); }
-  catch (err) { say(err.message, 'err'); }
+  try { if (!demo) await api({ action:'hide', key, username:e.username, hidden:!e.hidden }); e.hidden = !e.hidden; render(); lsay(''); }
+  catch (err) { lsay(err.message, 'err'); }
 }
 async function removeEntry(e) {
+  if (!guard()) return;
   if (!confirm('Delete "' + e.username + '" permanently? This cannot be undone.')) return;
-  try { if (!demo) await api({ action:'adminDelete', key, username:e.username }); entries = entries.filter(x => x !== e); render(); say('Deleted ' + e.username + '.', 'ok'); }
-  catch (err) { say(err.message, 'err'); }
+  try { if (!demo) await api({ action:'adminDelete', key, username:e.username }); entries = entries.filter(x => x !== e); render(); lsay('Deleted ' + e.username + '.', 'ok'); }
+  catch (err) { lsay(err.message, 'err'); }
 }
 
 /* ---------- Create / Update: the editor ---------- */
@@ -62,7 +72,7 @@ pick($('eShapes'), SHAPES, 'shape', (b, v) => { b.className = 'shape'; b.textCon
 function openEditor(e) {                       // e = entry to edit, or nothing to add a new one
   editing = e || null;
   $('et').textContent = e ? 'Edit entry' : 'Add entry';
-  $('eUser').value = e ? e.username : ''; $('eUser').readOnly = !!e; $('ePin').value = '';
+  $('eUser').value = e ? e.username : ''; $('eUser').readOnly = !!e; $('ePin').value = ''; maskPw($('ePin'));
   $('ePinNote').textContent = e ? 'Leave empty to keep the current PIN. Type a new one to reset it.' : 'Optional. Without a PIN, the student cannot edit this entry later.';
   $('eMsg').value = e ? e.message : '';
   Object.assign(E, e ? { emoji:e.emoji || ICONS[0], color:e.color, shape:e.shape, image:e.image || '' } : { emoji:ICONS[0], color:COLORS[0], shape:'burst', image:'' });
@@ -81,11 +91,11 @@ async function saveEntry() {
     if (!demo) await api({ action:'adminSave', key, pin, ...d });
     const i = entries.findIndex(x => x.username === d.username);
     i < 0 ? entries.push(d) : entries[i] = d;
-    render(); $('editor').hidden = true; say((i < 0 ? 'Added ' : 'Updated ') + d.username + '.', 'ok');
+    render(); $('editor').hidden = true; lsay((i < 0 ? 'Added ' : 'Updated ') + d.username + '.', 'ok');
   } catch (err) { esay(err.message, 'err'); }
   $('eSave').disabled = false;
 }
-$('add').onclick = () => openEditor();
+$('add').onclick = () => guard() && openEditor();
 $('eSave').onclick = saveEntry;
 $('editor').onclick = ev => { if (ev.target === $('editor') || ev.target.closest('[data-close]')) $('editor').hidden = true; };
 $('eImg').onchange = ev => {                   // shrink to 120x120 JPEG so it fits in a sheet cell
@@ -99,7 +109,11 @@ $('eImg').onchange = ev => {                   // shrink to 120x120 JPEG so it f
 $('eRm').onclick = () => { E.image = ''; $('eImg').value = ''; $('eImgRow').hidden = true; };
 
 /* ---------- Play the January 1 show ---------- */
-const setPlay = on => { $('play').innerHTML = on ? '<span class="full">Stop show</span><span class="short">■ Stop</span>' : '<span class="full">Play January 1 show</span><span class="short">▶ Play</span>'; };
+const setPlay = on => {
+  $('play').innerHTML = on ? '<span class="full">Stop show</span><span class="short"><span class="ic">■</span><span class="tx"> Stop</span></span>'
+                          : '<span class="full">Play January 1 show</span><span class="short"><span class="ic">▶</span><span class="tx"> Play</span></span>';
+  $('play').setAttribute('aria-label', on ? 'Stop show' : 'Play January 1 show');
+};
 $('play').onclick = () => {
   if (showOn) { stopShow(); document.body.classList.remove('show'); $('finale').hidden = true; setPlay(false); return; }
   document.body.classList.add('show'); $('finale').hidden = false; setPlay(true);
@@ -108,3 +122,15 @@ $('play').onclick = () => {
 $('finale').querySelector('.x').onclick = () => $('finale').hidden = true;
 try { const k = sessionStorage.getItem('ny27key'); if (k) $('key').value = k; } catch {}
 $('key').addEventListener('change', () => { try { sessionStorage.setItem('ny27key', $('key').value); } catch {} });
+
+/* ---------- Show / hide password ---------- */
+function maskPw(input) {                       // back to hidden (used whenever a field is reset)
+  input.type = 'password'; const b = input.nextElementSibling;
+  if (b) { b.textContent = 'Show'; b.setAttribute('aria-pressed', 'false'); b.setAttribute('aria-label', 'Show password'); }
+}
+document.querySelectorAll('.eye').forEach(b => b.onclick = () => {
+  const input = b.previousElementSibling, show = input.type === 'password';
+  input.type = show ? 'text' : 'password';
+  b.textContent = show ? 'Hide' : 'Show'; b.setAttribute('aria-pressed', show); b.setAttribute('aria-label', show ? 'Hide password' : 'Show password');
+  input.focus();
+});
