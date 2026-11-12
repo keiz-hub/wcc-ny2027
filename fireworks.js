@@ -1,7 +1,7 @@
 /* Shared by the public site and /admin: config, API, firework engine, catchable icons. */
 const CFG = {
   API: 'https://script.google.com/macros/s/AKfycbzPvbtCzZB_G7OZ2sQCT1gaFSbJ-rAaMza8aKRU4KxrO-I7unV7W8VrJFMLEs_eQ37n/exec',      // see README
-  TARGET: new Date('2027-01-01T00:00:00+08:00'),  // midnight, Philippine time (UTC+8)
+  TARGET: new Date('2026-11-12T16:46:00+08:00'),  // midnight, Philippine time (UTC+8)
   SCHOOL_NAME: 'World Citi Colleges',
   GREETING: 'Happy New Year 2027 from all of us at World Citi Colleges! Wishing you a bright, blessed and successful year ahead.'
 };
