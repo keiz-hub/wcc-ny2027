@@ -104,7 +104,7 @@ const showGap = n => clamp(SHOW.total / Math.max(n, 1), SHOW.min, SHOW.max);
 let showOn = false, runId = 0, timers = [];
 
 /* ---------- Sound: the 3 firework effects are built in; the music can be your own file ---------- */
-const A = { music:true, sfx:true, musVol:.4, sfxVol:1, style:'bang', ctx:null };   // defaults: music 40%, effects 100%
+const A = { music:true, sfx:true, musVol:.2, sfxVol:1, style:'bang', ctx:null };   // defaults: music 40%, effects 100%
 try { Object.assign(A, JSON.parse(localStorage.getItem('ny27audio2') || '{}')); } catch {}
 if (!['bang', 'pop', 'sparkle'].includes(A.style)) A.style = 'bang';
 
