@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Countdown to 2027 · World Citi Colleges</title>
+<link rel="icon" href="assets/favicon.png">
+<meta name="description" content="Write a message, pick a firework, and watch every entry light up the sky at midnight, January 1, 2027.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Nunito+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<canvas id="sky" aria-hidden="true"></canvas>
+<div id="gifts" aria-live="polite"></div>
+
+<header class="top">
+  <a class="brand" href="#top">
+    <img src="assets/logo.png" alt="World Citi Colleges logo" width="96" height="46">
+    <span>Countdown to 2027</span>
+  </a>
+  <nav><button type="button" class="navbtn" id="how">How it works</button><a href="#create">Make</a><a href="#find">My entry</a></nav>
+</header>
+
+<main id="top">
+  <section class="hero">
+    <p class="lead">Fireworks light up at midnight on</p>
+    <h1>January 1, 2027</h1>
+    <div class="clock" id="clock" role="timer" aria-label="Time left until New Year 2027">
+      <div><b id="d">--</b><span>days</span></div>
+      <div><b id="h">--</b><span>hours</span></div>
+      <div><b id="m">--</b><span>minutes</span></div>
+      <div><b id="s">--</b><span>seconds</span></div>
+    </div>
+    <p class="count"><b id="total">0</b> fireworks waiting to launch. The sky opens to everyone at midnight.</p>
+    <a class="btn" href="#create">Make yours</a>
+  </section>
+
+  <section class="panel" id="create">
+    <h2>Make your firework</h2>
+    <p class="sub">Your icon launches with your firework. When someone catches it, your New Year Resolution pops up.</p>
+    <div class="grid">
+      <div class="form">
+        <label>Username <input id="user" maxlength="20" autocomplete="off" placeholder="e.g. maria_2027"></label>
+        <small>3–20 letters, numbers or underscores. You will use it to find and edit your entry.</small>
+        <label>PIN <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="4–8 digits to protect your entry"></label>
+        <label>Your New Year Resolution <textarea id="msg" maxlength="140" rows="3" placeholder="This year, I will..."></textarea></label>
+        <div class="chars"><span id="left">80</span> characters left</div>
+
+        <fieldset><legend>Pick your icon (emoji)</legend>
+          <div class="emojis" id="emojis"></div>
+        </fieldset>
+        <label>Or use a picture as your icon <input id="img" type="file" accept="image/*"></label>
+        <div id="imgrow" hidden><img id="thumb" alt="Selected picture"><button type="button" class="ghost" id="rmimg">Remove picture</button></div>
+
+        <fieldset><legend>Firework style</legend>
+          <div class="row" id="colors"></div>
+          <div class="row" id="shapes"></div>
+        </fieldset>
+
+        <div class="row actions">
+          <button class="btn" id="preview" type="button">Preview</button>
+          <button class="btn alt" id="save" type="button">Save my firework</button>
+        </div>
+        <p id="status" role="status"></p>
+      </div>
+      <aside class="card" id="card" aria-label="Preview of your icon and resolution"><p class="hint">People catch this icon in the sky and tap it to read your resolution. Tap here to preview.</p>
+        <div class="bubble"><div class="big" id="pEmoji">🎆</div><img id="pImg" alt="" hidden><p id="pMsg">Your resolution will appear here.</p><i id="pUser">— username</i></div>
+      </aside>
+    </div>
+  </section>
+
+  <section class="panel" id="find">
+    <h2>Find my entry</h2>
+    <p class="sub">Type your username and PIN to load your firework and change it before midnight.</p>
+    <div class="row"><input id="fuser" maxlength="20" placeholder="Username"><input id="fpin" type="password" inputmode="numeric" maxlength="8" placeholder="PIN"><button class="btn" id="load" type="button">Load</button></div>
+  </section>
+</main>
+
+<aside id="finale" class="toast" hidden><button class="x" type="button" aria-label="Close">×</button><h2>Happy New Year 2027!</h2><p>Tap an icon in the sky to read that person's New Year Resolution.</p></aside>
+<div class="modal" id="welcome" hidden><div class="box" role="dialog" aria-modal="true" aria-labelledby="wt"><button class="x" data-close type="button" aria-label="Close">×</button><div class="wl"><img src="assets/logo.png" alt="World Citi Colleges" height="56"></div><h2 id="wt">Welcome! Let's light up 2027</h2><p>At midnight on January 1, 2027, every firework launches together. You decide what goes into yours.</p><ol><li>Choose a username and a PIN.</li><li>Write your New Year Resolution, pick an icon (emoji or picture) and a firework style.</li><li>Save it. Edit it anytime before midnight under My entry.</li><li>On January 1 at 12:00 AM, tap the icons in the sky to read everyone's resolutions.</li></ol><button class="btn" id="wgo" data-close type="button">Start making mine</button></div></div>
+<footer>Made with love by the APO of <b>World Citi Colleges Guimba Campus</b>. Merry Christmas and Happy New Year!</footer>
+<script src="sky.js"></script>
+<script src="fireworks.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
