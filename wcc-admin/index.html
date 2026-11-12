@@ -14,18 +14,19 @@
 <div id="gifts"></div>
 <header class="top">
   <a class="brand" href="./"><img src="../assets/logo.png" alt="World Citi Colleges logo" width="96" height="46"><span>Admin</span></a>
-  <nav><button type="button" class="btn" id="play" disabled><span class="full">Play January 1 show</span><span class="short">▶ Play</span></button><a href="../">Public site</a></nav>
+  <nav><button type="button" class="btn" id="play" aria-label="Play January 1 show" disabled><span class="full">Play January 1 show</span><span class="short"><span class="ic">▶</span><span class="tx"> Play</span></span></button><a href="../">Public site</a></nav>
 </header>
 <main>
   <section class="panel" id="login">
     <h2>Preview the January 1 sky</h2>
     <p class="sub">Enter the admin key from <code>Code.gs</code> to load the real entries, or try demo entries. The show here plays exactly as the public will see it at midnight.</p>
-    <div class="row"><input id="key" type="password" placeholder="Admin key" autocomplete="off"><button class="btn" id="go" type="button">Load entries</button><button class="ghost" id="demo" type="button">Use demo entries</button></div>
+    <div class="row"><div class="pw"><input id="key" type="password" placeholder="Admin key" autocomplete="off"><button type="button" class="eye" aria-label="Show password" aria-pressed="false">Show</button></div><button class="btn" id="go" type="button">Load entries</button><button class="ghost" id="demo" type="button">Use demo entries</button></div>
     <p id="status" role="status"></p>
   </section>
   <section class="panel" id="list" hidden>
     <div class="row between"><h2>Entries (<span id="cnt">0</span>)</h2><button class="btn" id="add" type="button">+ Add entry</button></div>
     <p class="sub" id="info"></p>
+    <p id="lstatus" role="status"></p>
     <div class="tablewrap"><table><thead><tr><th>Icon</th><th>Username</th><th>New Year Resolution</th><th>Style</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
   </section>
 </main>
@@ -33,7 +34,7 @@
   <button class="x" data-close type="button" aria-label="Close">×</button>
   <h2 id="et">Add entry</h2>
   <label>Username <input id="eUser" maxlength="20" autocomplete="off" placeholder="letters, numbers, underscore"></label>
-  <label>PIN (optional) <input id="ePin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
+  <label>PIN (optional) <div class="pw"><input id="ePin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"><button type="button" class="eye" aria-label="Show password" aria-pressed="false">Show</button></div></label>
   <small id="ePinNote"></small>
   <label>New Year Resolution <textarea id="eMsg" maxlength="140" rows="3"></textarea></label>
   <fieldset><legend>Icon (emoji)</legend><div class="emojis" id="eEmojis"></div></fieldset>
