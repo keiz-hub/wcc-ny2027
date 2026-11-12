@@ -14,21 +14,36 @@
 <div id="gifts"></div>
 <header class="top">
   <a class="brand" href="./"><img src="../assets/logo.png" alt="World Citi Colleges logo" width="96" height="46"><span>Admin</span></a>
-  <nav><button type="button" class="btn" id="play" disabled>Play January 1 show</button><a href="../">Public site</a></nav>
+  <nav><button type="button" class="btn" id="play" disabled><span class="full">Play January 1 show</span><span class="short">▶ Play</span></button><a href="../">Public site</a></nav>
 </header>
 <main>
   <section class="panel" id="login">
-    <h2>January 1 Preview</h2>
-    <p class="sub">Get the admin key on<code>Code.gs</code> to load the real entries, or try demo entries. The show here plays exactly as the public will see it at midnight.</p>
+    <h2>Preview the January 1 sky</h2>
+    <p class="sub">Enter the admin key from <code>Code.gs</code> to load the real entries, or try demo entries. The show here plays exactly as the public will see it at midnight.</p>
     <div class="row"><input id="key" type="password" placeholder="Admin key" autocomplete="off"><button class="btn" id="go" type="button">Load entries</button><button class="ghost" id="demo" type="button">Use demo entries</button></div>
     <p id="status" role="status"></p>
   </section>
   <section class="panel" id="list" hidden>
-    <h2>Entries (<span id="cnt">0</span>)</h2>
+    <div class="row between"><h2>Entries (<span id="cnt">0</span>)</h2><button class="btn" id="add" type="button">+ Add entry</button></div>
     <p class="sub" id="info"></p>
-    <div class="tablewrap"><table><thead><tr><th>Icon</th><th>Username</th><th>New Year Resolution</th><th>Style</th><th>Public</th></tr></thead><tbody id="rows"></tbody></table></div>
+    <div class="tablewrap"><table><thead><tr><th>Icon</th><th>Username</th><th>New Year Resolution</th><th>Style</th><th>Actions</th></tr></thead><tbody id="rows"></tbody></table></div>
   </section>
 </main>
+<div class="modal" id="editor" hidden><div class="box wide" role="dialog" aria-modal="true" aria-labelledby="et">
+  <button class="x" data-close type="button" aria-label="Close">×</button>
+  <h2 id="et">Add entry</h2>
+  <label>Username <input id="eUser" maxlength="20" autocomplete="off" placeholder="letters, numbers, underscore"></label>
+  <label>PIN (optional) <input id="ePin" type="password" inputmode="numeric" maxlength="8" autocomplete="new-password"></label>
+  <small id="ePinNote"></small>
+  <label>New Year Resolution <textarea id="eMsg" maxlength="140" rows="3"></textarea></label>
+  <fieldset><legend>Icon (emoji)</legend><div class="emojis" id="eEmojis"></div></fieldset>
+  <label>Or a picture <input id="eImg" type="file" accept="image/*"></label>
+  <div id="eImgRow" hidden><img id="eThumb" alt="Selected picture"><button type="button" class="ghost" id="eRm">Remove picture</button></div>
+  <fieldset><legend>Firework style</legend><div class="row" id="eColors"></div><div class="row" id="eShapes"></div></fieldset>
+  <label class="sw2"><input type="checkbox" id="eHidden"> Hide from the public show</label>
+  <p id="eStatus" role="status"></p>
+  <div class="row"><button class="btn" id="eSave" type="button">Save entry</button><button class="ghost" data-close type="button">Cancel</button></div>
+</div></div>
 <aside id="finale" class="toast" hidden><button class="x" type="button" aria-label="Close">×</button><h2>Admin preview</h2><p>This is how January 1 looks. Tap an icon to read its resolution. Use Stop show to return.</p></aside>
 <script src="../sky.js"></script>
 <script src="../fireworks.js"></script>
